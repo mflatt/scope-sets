@@ -8,7 +8,7 @@
        #:version ""]{Binding as Sets of Scopes@html-only{@aux{
        @linebreak[]
        @smaller{Notes on a new model of macro expansion for Racket}}}}
-@authorinfo["Matthew Flatt" "Univesity of Utah, USA" "mflatt@cs.utah.edu"]
+@authorinfo["Matthew Flatt" "University of Utah, USA" "mflatt@cs.utah.edu"]
 
 @pdf-only{@abstract{
 
@@ -137,7 +137,7 @@ reasonable effort.
 @section[#:style 'unnumbered]{Acknowledgments}
 
 Thanks to Matthias Felleisen, Robby Findler, Sam Tobin-Hochstadt, Jay
- McCarthy, Ryan Culpepper, Michael Adams, Michael Ballantyne, Tim
+ McCarthy, Ryan Culpepper, Brian Mastenbrook, Michael Adams, Michael Ballantyne, Tim
  Disney, Simon Peyton Jones, Shriram Krishnamurthi, and Eelco Visser
  for discussions about set-of-scopes binding.
  Joshua Grams provided helpful editing suggestions. Anthony Carrico
