@@ -4,13 +4,14 @@ default:
 	$(MAKE) html
 
 PDF_CONFIG = SCOPE_SETS_TO_PDF=0.7 SCOPE_SETS_TO_PDF_INLINE=0.8
+PDF_STYLE = ++style style.tex ++extra aec-badge-popl.pdf
 pdf:
 	raco make scope-sets.scrbl
-	env $(PDF_CONFIG) raco scribble +m --pdf ++style style.tex scope-sets.scrbl
+	env $(PDF_CONFIG) raco scribble +m --pdf $(PDF_STYLE) scope-sets.scrbl
 
 latex:
 	raco make scope-sets.scrbl
-	env $(PDF_CONFIG) raco scribble +m --latex ++style style.tex --dest /tmp/scope-sets-src scope-sets.scrbl
+	env $(PDF_CONFIG) raco scribble +m --latex $(PDF_STYLE) --dest /tmp/scope-sets-src scope-sets.scrbl
 
 html:
 	raco make scope-sets.scrbl

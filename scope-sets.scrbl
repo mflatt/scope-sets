@@ -146,4 +146,4 @@ Thanks to Matthias Felleisen, Robby Findler, Sam Tobin-Hochstadt, Jay
   This work was supported by grants from the NSF.
 })
 
-@generate-bibliography[]
+@generate-bibliography[#:sec-title "References"]
