@@ -158,8 +158,8 @@ Note: Racket's macro system matches @citet[syntax-case], where both
 @racket[#f] for the above arguments, and @racket[bound-identifier=?]
 always implies @racket[free-identifier=?]. The current @exec{psyntax}
 implementation, as used by Chez Scheme and other implementations and
-as consistent with @citet[essence-of-hygiene], produces @racket[#t]
-and @racket[#f] for @racket[free-identifier=?] and
+as consistent with @citet[essence-of-hygiene], produces @racket[#f]
+and @racket[#t] for @racket[free-identifier=?] and
 @racket[bound-identifier=?], respectively; as the example illustrates,
 @racket[bound-identifier=?] does not imply @racket[free-identifier=?].
 The set-of-scopes system produces @racket[#t] and @racket[#t] for

@@ -532,7 +532,6 @@
                           resolve-nts
                           expand-nts)))
 
-#;
 (module+ main
   (require "viewer.rkt"
            (submod ".." pict))

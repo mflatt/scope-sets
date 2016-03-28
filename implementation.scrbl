@@ -208,7 +208,7 @@ needed to expose differences between the existing and set-of-scopes expanders.
        submodule.}
 
  @item{Along the same lines as expanding to a submodule form, a
-       pattern-matching macros that expands to a @racket[unit] form
+       pattern-matching macro that expands to a @racket[unit] form
        can behave differently if a mentioned signature or definition
        are not both introduced by the macro or from the macro use
        site. In other words, adjustments to the @racket[unit] macro to

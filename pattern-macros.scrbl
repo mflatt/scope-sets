@@ -96,7 +96,7 @@ some notion of ``closest.'' Given scope sets instead of individual
 scopes, we can define ``closest'' as the largest relevant set.
 
 More generally, we can define binding based on @emph{subsets}: A
-reference's binding is found as one whose set of scopes is a subset of
+reference's binding is found as one whose set of scopes is the largest subset of
 the reference's own scopes (in addition to having the same symbolic
 name). The advantage of using sets of scopes is that macro expansion
 creates scope sets that overlap in more general ways; there's not
