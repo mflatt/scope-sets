@@ -60,6 +60,7 @@
 (define s_4i @scope-id[4]{intro})
 (define s_4lt @scope-id[4]{let})
 (define s_5u @scope-id[5]{use})
+(define s_5bdy @scope-id[5]{bdy})
 (define s_i @scope-id[#f]{s})
 
 (define (aside/proc get-l)

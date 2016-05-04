@@ -278,8 +278,42 @@ s_3lm] and @set[s_1ls s_3lm s_4lt], neither of which is a subset of
 the other. Instead, we want @racket[x] to refer to the @racket[lambda]
 binding.
 
-Adding a scope for the macro-use site corrects this problem. If we
-call the use-site scope @|s_5u|, then we start with
+The problem is that our scope rules, so far, do not ensure that a
+macro definition and a macro use are separated by at least one scope.
+This problem with @racket[letrec-syntax] can be fixed by adding an
+additional scope to a @racket[letrec-syntax] body. In that case,
+with @|s_5bdy| added to the body in the @racket[identity] example,
+@;
+@racketblock[
+(letrec-syntax ([identity (syntax-rules ()
+                            [(_ misc-id)
+                             (lambda (@#,id[x s_1ls])
+                               (let ([misc-id 'other])
+                                 @#,id[x s_1ls]))])])
+   (identity @#,id[x s_1ls s_5bdy]))
+]
+@;
+leads eventually to
+@;
+@racketblock[
+(lambda (@#,id[x s_1ls s_2i s_3lm])
+  (let ([@#,id[x s_1ls s_5bdy s_3lm s_4lt] 'other])
+    @#,id[x s_1ls s_2i s_3lm s_4lt]))
+]
+@;
+There's no ambiguity, and the final @racket[x] refers to the
+@racket[lambda] binding as intended.
+
+@aside{
+
+ This extra scope for the body is not the approach taken in Racket's
+ expander, for reasons that are explained in the next section,
+ @secref["intdef"].
+
+}
+
+Adding a scope for each individual macro-use site corrects this problem in a
+similar way. If we call the use-site scope @|s_5u|, then we start with
 @;
 @racketblock[(identity @#,id[x s_1ls s_5u])]
 @;
@@ -299,10 +333,9 @@ which ends up as
     @#,id[x s_1ls s_2i s_3lm s_4lt]))
 ]
 @;
-There's no ambiguity, and the final @racket[x] refers to the
-@racket[lambda] binding as intended. In short, each macro expansion
-needs a use-site scope as the symmetric counterpart to the
-macro-introduction scope.
+Again, there's no ambiguity. A use-site scope acts as the symmetric
+counterpart to the macro-introduction scope to ensure that a macro's
+definition and use sites are distinguished by scopes in both directions.
 
 @; --------------------------------------------------
 @section[#:tag "intdef"]{Use-Site Scopes and Macro-Generated Definitions}
@@ -316,9 +349,23 @@ expressions, all in a single recursive scope. Definitions can include
 macro definitions, expressions can include uses of those same macros,
 and macro uses can even expand to further definitions.
 
-With set-of-scopes macro expansion, macro
-definitions and uses within a single context interact badly with
-use-site scopes. For example, consider a @racket[define-identity]
+Use-site scopes distinguish macro definitions and uses within a
+definition context in the same way that they work for
+@racket[letrec-syntax]. The body-scope alternative for
+@racket[letrec-syntax] (as described in the previous section,
+@secref["use-site"]) does not work for definition contexts, since the
+macro definitions and uses are not initially separated; use-site scopes
+allow definition and use sites to be distinguished as they are
+discovered. A distinct use-site scope is needed for each macro use, since
+a macro use may introduce a new macro definition that is itself used in
+the same definition context; a single use-site scope for the whole
+definition context would not distinguish the macro-generated macro's
+definition from its uses, while a per-use scope supports arbitrary
+chains of uses and definitions.
+
+When a macro use expands to a new definition, then any identifier in
+the macro use may turn out to be a binding identifier in the macro
+expansion. For example, consider a @racket[define-identity]
 macro that is intended to expand to a definition of a given identifier
 as the identity function:
 @;
@@ -330,11 +377,11 @@ as the identity function:
   (f 5)
 ]
 @;
-If the expansion of @racket[(define-identity f)] adds a scope to the
-use-site @racket[f], the resulting definition does not bind the
+If the expansion of @racket[(define-identity f)] adds a scope @|s_5u| to the
+use-site @racket[f], the resulting definition of @id[f s_5u] does not bind the
 @racket[f] in @racket[(f 5)].
 
-The underlying issue is that a definition context must treat
+Another way to describe the issue is that a definition context must treat
 use-site and introduced identifiers asymmetrically as binding
 identifiers. In
 @;
@@ -366,7 +413,8 @@ macro-introduced binding @racket[x].
 To support macros that expand to definitions of given identifiers, a
 definition context must keep track of scopes created for macro uses,
 and it must remove those scopes from identifiers that end up in
-binding positions. In the @racket[define-identity] and
+binding positions (effectively moving them back to the definition scope).
+In the @racket[define-identity] and
 @racket[define-five] examples, the use-site scope is removed from the
 binding identifiers @racket[x] and @racket[f], so they are treated the
 same as if their definitions appeared directly in the source.
